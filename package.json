@@ -1,7 +1,7 @@
 {
   "name": "GACC",
   "version": "1.0.0",
-  "description": "",
+  "description": "Web aplikasi untuk klasifikasi karakter anime menggunakan model machine learning (ONNX) dengan reaksi video yang unik berdasarkan hasil deteksi.",
   "main": "index.js",
   "scripts": {
     "setup": "node setup.js",
@@ -9,7 +9,7 @@
   },
   "keywords": [],
   "author": "rynn-k",
-  "license": "ISC",
+  "license": "MIT",
   "type": "commonjs",
   "dependencies": {
     "csv-parse": "^6.2.1",
