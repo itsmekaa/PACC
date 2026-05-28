@@ -133,5 +133,5 @@ app.post('/api/detect', upload.single('image'), async (req, res) => {
 });
 
 loadModel().then(() => {
-    app.listen(3000, () => console.log('Server running on http://localhost:3000'));
+    app.listen(7860, () => console.log('Server running on http://localhost:7860'));
 });
