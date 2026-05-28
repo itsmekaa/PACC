@@ -27,7 +27,7 @@ npm run setup
 ```bash
 node index.js
 ```
-Server akan berjalan di `http://localhost:3000`.
+Server akan berjalan di `http://localhost:7860`.
 
 ## Struktur Proyek
 - `/models`: Berisi `model.onnx` dan `selected_tags.csv` untuk logika klasifikasi.
