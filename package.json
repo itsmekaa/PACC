@@ -1,0 +1,22 @@
+{
+  "name": "GACC",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "setup": "node setup.js",
+    "start": "node index.js"
+  },
+  "keywords": [],
+  "author": "rynn-k",
+  "license": "ISC",
+  "type": "commonjs",
+  "dependencies": {
+    "csv-parse": "^6.2.1",
+    "ejs": "^6.0.1",
+    "express": "^5.2.1",
+    "multer": "^2.1.1",
+    "onnxruntime-node": "^1.26.0",
+    "sharp": "^0.34.5"
+  }
+}

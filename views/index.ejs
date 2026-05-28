@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gibran Anime Character Classification</title>
+    <meta name="description" content="Unggah gambar karakter anime favoritmu dan biarkan Gibran yang menentukan tier-nya!">
+    <meta name="theme-color" content="#eef2ff">
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Fredoka', sans-serif;
+        }
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
+</head>
+<body class="bg-indigo-50 text-gray-800 m-0 h-[100dvh] flex items-center justify-center overflow-hidden relative">
+    <div class="relative bg-white border-4 border-indigo-400 rounded-[2rem] w-[88%] max-w-sm text-center flex flex-col max-h-[95dvh] overflow-hidden shadow-[8px_8px_0px_0px_rgba(0,0,0,1)]">
+        <div class="bg-gray-900 p-3 px-6 flex items-center justify-between">
+            <a href="https://github.com/rynn-k/GACC" target="_blank" rel="noopener noreferrer" class="text-white hover:text-gray-400 transition-colors flex items-center gap-2" title="GitHub Repo">
+                <i class="fa-brands fa-github text-sm"></i>
+                <span class="text-[12px] font-semibold">View on GitHub</span>
+            </a>
+        </div>
+        <div class="p-5 flex flex-col">
+            <div id="appHeader" class="mb-4 text-left px-1">
+                <div class="flex flex-col w-full">
+                    <h1 class="text-2xl font-extrabold text-indigo-600 leading-tight mb-1">
+                        Gibran Anime Character Classification
+                    </h1>
+                    <p class="text-sm text-gray-500 font-medium leading-snug">Unggah gambar karakter anime favoritmu dan biarkan Gibran yang menentukan tier-nya!</p>
+                </div>
+            </div>
+        <form id="detectForm" class="flex flex-col gap-3 w-full">
+            <div id="dropZone" class="border-4 border-dashed border-indigo-300 rounded-2xl p-4 py-2 bg-indigo-50 relative cursor-pointer hover:bg-indigo-100 transition-colors flex flex-col items-center justify-center min-h-[96px] overflow-hidden">
+                <input type="file" name="image" id="imageInput" accept="image/*" required class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-20">
+                <div id="uploadText" class="text-indigo-400 font-semibold text-sm flex items-center justify-center gap-2 z-10 relative pointer-events-none">
+                    <i class="fa-solid fa-cloud-arrow-up text-xl"></i>
+                    Pilih Gambar
+                </div>
+                <div id="previewContainer" class="hidden items-center gap-3 w-full z-10 relative">
+                    <img id="previewImage" class="w-16 h-16 rounded-xl object-cover border-4 border-indigo-200">
+                    <div class="flex flex-col items-start text-left overflow-hidden flex-1">
+                        <span id="fileName" class="text-sm text-gray-600 font-bold truncate w-full"></span>
+                        <span id="fileSize" class="text-xs text-indigo-500 font-medium"></span>
+                    </div>
+                </div>
+            </div>
+            <button type="submit" id="submitBtn" class="bg-indigo-500 hover:bg-indigo-600 text-white font-bold py-2 px-4 rounded-2xl transition-colors text-sm flex items-center justify-center gap-2">
+                <i class="fa-solid fa-bolt"></i> Deteksi
+            </button>
+        </form>
+        <div id="loading" class="hidden py-10 text-indigo-500 font-bold text-base flex flex-col items-center justify-center">
+            <i class="fa-solid fa-circle-notch fa-spin text-3xl mb-3"></i>
+            Menganalisis...
+        </div>
+        <div id="result" class="hidden flex-col gap-3 w-full overflow-y-auto no-scrollbar pb-1">
+            <div id="resultPreviewContainer" class="flex items-center gap-3 w-full border-4 border-pink-400 rounded-2xl p-3 bg-pink-50">
+                <img id="resultPreviewImage" class="w-16 h-16 rounded-xl object-cover border-4 border-pink-200">
+                <div class="flex flex-col items-start text-left overflow-hidden flex-1">
+                    <span id="resultFileName" class="text-sm text-pink-900 font-bold truncate w-full"></span>
+                    <span id="resultFileSize" class="text-xs text-pink-700 font-medium"></span>
+                </div>
+            </div>
+            <div class="text-left border-4 border-pink-400 rounded-2xl p-3 bg-pink-50 flex flex-col gap-1">
+                <p class="font-bold text-pink-700 text-xs flex items-start gap-1">
+                    <i class="fa-solid fa-user mt-0.5 w-4"></i> 
+                    <span>Karakter: <span id="charName" class="font-medium text-pink-900"></span></span>
+                </p>
+                <p class="font-bold text-pink-700 text-xs flex items-start gap-1 line-clamp-2">
+                    <i class="fa-solid fa-tags mt-0.5 w-4"></i> 
+                    <span>Tag: <span id="charTags" class="font-medium text-pink-900"></span></span>
+                </p>
+                <div class="mt-0.5 flex flex-col w-full">
+                    <p class="font-bold text-pink-700 text-xs mb-2 flex items-center gap-1">
+                        <i class="fa-solid fa-video mt-0.5 w-4"></i> Reaksi Gibran:
+                    </p>
+                    <video id="resultVideo" autoplay controls class="w-full h-auto rounded-xl border-4 border-pink-300 object-contain bg-black"></video>
+                </div>
+            </div>
+            <button id="resetBtn" class="bg-pink-500 hover:bg-pink-600 text-white font-bold py-2 px-4 rounded-2xl transition-colors text-sm flex items-center justify-center gap-2">
+                <i class="fa-solid fa-rotate-left"></i> Kembali
+            </button>
+        </div>
+    </div>
+    <script>
+        const appHeader = document.getElementById('appHeader');
+        const form = document.getElementById('detectForm');
+        const imageInput = document.getElementById('imageInput');
+        const previewContainer = document.getElementById('previewContainer');
+        const previewImage = document.getElementById('previewImage');
+        const fileName = document.getElementById('fileName');
+        const fileSize = document.getElementById('fileSize');
+        const uploadText = document.getElementById('uploadText');
+        const resultDiv = document.getElementById('result');
+        const resultPreviewImage = document.getElementById('resultPreviewImage');
+        const resultFileName = document.getElementById('resultFileName');
+        const resultFileSize = document.getElementById('resultFileSize');
+        const loadingDiv = document.getElementById('loading');
+        const charName = document.getElementById('charName');
+        const charTags = document.getElementById('charTags');
+        const resultVideo = document.getElementById('resultVideo');
+        const resetBtn = document.getElementById('resetBtn');
+        let currentUrl = null;
+        let currentFile = null;
+
+        function formatBytes(bytes, decimals = 2) {
+            if (!+bytes) return '0 Bytes';
+            const k = 1024;
+            const dm = decimals < 0 ? 0 : decimals;
+            const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+            const i = Math.floor(Math.log(bytes) / Math.log(k));
+            return `${parseFloat((bytes / Math.pow(k, i)).toFixed(dm))} ${sizes[i]}`;
+        }
+
+        imageInput.addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (file) {
+                if (currentUrl) URL.revokeObjectURL(currentUrl);
+                currentUrl = URL.createObjectURL(file);
+                currentFile = file;
+                
+                previewImage.src = currentUrl;
+                fileName.textContent = file.name;
+                fileSize.textContent = formatBytes(file.size);
+                
+                previewContainer.classList.remove('hidden');
+                previewContainer.classList.add('flex');
+                uploadText.classList.add('hidden');
+            }
+        });
+
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const formData = new FormData(form);
+            
+            form.classList.add('hidden');
+            appHeader.classList.add('hidden');
+            loadingDiv.classList.remove('hidden');
+            loadingDiv.classList.add('flex');
+
+            try {
+                const res = await fetch('/api/detect', {
+                    method: 'POST',
+                    body: formData
+                });
+                
+                if (!res.ok) throw new Error('Gagal');
+                
+                const data = await res.json();
+                
+                charName.textContent = data.character;
+                charTags.textContent = data.tags;
+                resultVideo.src = data.video;
+                
+                resultPreviewImage.src = currentUrl;
+                resultFileName.textContent = currentFile.name;
+                resultFileSize.textContent = formatBytes(currentFile.size);
+                
+                loadingDiv.classList.add('hidden');
+                loadingDiv.classList.remove('flex');
+                resultDiv.classList.remove('hidden');
+                resultDiv.classList.add('flex');
+            } catch (err) {
+                alert('Terjadi kesalahan saat mendeteksi.');
+                form.classList.remove('hidden');
+                appHeader.classList.remove('hidden');
+                loadingDiv.classList.add('hidden');
+                loadingDiv.classList.remove('flex');
+            }
+        });
+
+        resetBtn.addEventListener('click', () => {
+            resultDiv.classList.add('hidden');
+            resultDiv.classList.remove('flex');
+            form.classList.remove('hidden');
+            appHeader.classList.remove('hidden');
+            form.reset();
+            
+            previewContainer.classList.add('hidden');
+            previewContainer.classList.remove('flex');
+            uploadText.classList.remove('hidden');
+            
+            resultVideo.pause();
+            resultVideo.src = '';
+            if (currentUrl) {
+                URL.revokeObjectURL(currentUrl);
+                currentUrl = null;
+                currentFile = null;
+            }
+        });
+    </script>
+</body>
+</html>
