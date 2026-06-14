@@ -21,27 +21,27 @@ app.use(cors());
 const tagsRaw = fs.readFileSync(path.join(__dirname, 'models', 'selected_tags.csv'));
 const tags = parse(tagsRaw, { columns: true, skip_empty_lines: true });
 
-const KITA_GENJOT_TRUS = new Set([
+const ENAK_SEKALI = new Set([
     'large_breasts', 'huge_breasts', 'gigantic_breasts',
     'curvy', 'thick_thighs', 'wide_hips', 'voluptuous',
     'large_ass', 'big_ass', 'plump',
 ]);
 
-const AKAN_KAMI_GENJOT = new Set([
+const PULEN_PULEN = new Set([
     'medium_breasts', 'breasts', 'slim',
     'athletic', 'toned', 'fit', 'mature_female',
     'sexy', 'attractive',
 ]);
 
-const INI_AGAK_ANEH_YA = new Set([
+const KENAPA_KALIAN_KETAWA = new Set([
     'flat_chest', 'small_breasts', 'loli',
     'chibi', 'petite', 'tiny',
 ]);
 
 const VIDEO_MAP = {
-    kita_genjot_trus: '/videos/kita-genjot-trus.mp4',
-    akan_kami_genjot: '/videos/akan-kami-genjot.mp4',
-    ini_agak_aneh_ya: '/videos/ini-agak-aneh-ya.mp4',
+    enak_sekali: '/videos/enak-sekali.mp4',
+    pulen_pulen: '/videos/pulen-pulen.mp4',
+    kenapa_kalian_ketawa: '/videos/kenapa-kalian-ketawa.mp4',
 };
 
 let session = null;
@@ -98,21 +98,21 @@ function getCharacterName(tagScores) {
 }
 
 function getRelevantTags(tagScores) {
-    const allRelevant = new Set([...KITA_GENJOT_TRUS, ...AKAN_KAMI_GENJOT, ...INI_AGAK_ANEH_YA]);
+    const allRelevant = new Set([...ENAK_SEKALI, ...PULEN_PULEN, ...KENAPA_KALIAN_KETAWA]);
     return Object.entries(tagScores).filter(([t]) => allRelevant.has(t)).sort((a, b) => b[1] - a[1]).map(([t]) => t).join(', ') || 'no relevant tags';
 }
 
 function classify(tagScores) {
     const detected = new Set(Object.keys(tagScores));
-    const scoreGenjotTrus = [...KITA_GENJOT_TRUS].reduce((s, t) => s + (tagScores[t] || 0), 0);
-    const scoreGenjot = [...AKAN_KAMI_GENJOT].reduce((s, t) => s + (tagScores[t] || 0), 0);
+    const scoreGenjotTrus = [...ENAK_SEKALI].reduce((s, t) => s + (tagScores[t] || 0), 0);
+    const scoreGenjot = [...PULEN_PULEN].reduce((s, t) => s + (tagScores[t] || 0), 0);
 
-    const hasGenjotTrus = [...KITA_GENJOT_TRUS].some(t => detected.has(t));
-    const hasGenjot = [...AKAN_KAMI_GENJOT].some(t => detected.has(t));
+    const hasGenjotTrus = [...ENAK_SEKALI].some(t => detected.has(t));
+    const hasGenjot = [...PULEN_PULEN].some(t => detected.has(t));
 
-    if (hasGenjotTrus || scoreGenjotTrus > 0.5) return 'kita_genjot_trus';
-    if (hasGenjot || scoreGenjot > 0.4) return 'akan_kami_genjot';
-    return 'ini_agak_aneh_ya';
+    if (hasGenjotTrus || scoreGenjotTrus > 0.5) return 'enak_sekali';
+    if (hasGenjot || scoreGenjot > 0.4) return 'pulen_pulen';
+    return 'kenapa_kalian_ketawa';
 }
 
 app.get('/', (req, res) => {
