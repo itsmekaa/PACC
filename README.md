@@ -1,6 +1,6 @@
-![Banner](https://napkinsdev.s3.us-east-1.amazonaws.com/next-s3-uploads/5ae6434d-bbdb-452d-b473-6157d132c24b/1779983553820.png)
+![Banner](https://raw.githubusercontent.com/itsmekaa/PACC/refs/heads/main/thumb.png)
 
-# Gibran Anime Character Classification
+# Prabowo Anime Character Classification
 
 Web aplikasi untuk mengklasifikasikan gambar karakter anime menggunakan model machine learning (ONNX) dan memberikan reaksi video berdasarkan hasil klasifikasi.
 
@@ -15,8 +15,8 @@ Web aplikasi untuk mengklasifikasikan gambar karakter anime menggunakan model ma
 ## Instalasi dan Menjalankan
 ```bash
 # 1. Clone repositori
-git clone https://github.com/rynn-k/GACC
-cd GACC
+git clone https://github.com/itsmekaa/PACC
+cd PACC
 
 # 2. Instal dependensi
 npm install
